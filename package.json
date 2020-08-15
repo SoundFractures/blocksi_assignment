@@ -4,15 +4,21 @@
   "description": "Test assignment",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "server": "nodemon app.js",
+    "dashboard": "npm start --prefix dashboard",
+    "start": "concurrently \"npm run server\" \"npm run dashboard\""
   },
   "author": "SF",
   "license": "ISC",
   "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "axios": "^0.19.2",
     "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
-    "mongoose": "^5.10.0"
+    "mongoose": "^5.10.0",
+    "react-router-dom": "^5.2.0",
+    "yup": "^0.29.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.4"
