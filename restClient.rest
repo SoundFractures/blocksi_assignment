@@ -1,0 +1,35 @@
+GET http://localhost:5000/api/contacts
+content-type: application/json
+
+{
+    "user_id": "user1"
+}
+
+###
+
+PATCH http://localhost:5000/api/contacts/5f37a699e5f2d405849fbd28
+content-type: application/json
+
+{
+    "firstName": "Test New 2",
+    "lastName": "Test 1232",
+    "phoneNumber": "2123123123",
+    "user_id": "user1"
+}
+###
+
+
+POST http://localhost:5000/api/contacts
+content-type: application/json
+
+{
+    "firstName": "Test 44",
+    "lastName": "Test 44",
+    "phoneNumber": "2123123",
+    "user_id": "user2"
+}
+
+###
+
+DELETE http://localhost:5000/api/contacts/5f37a5faf861fe5cb4167f5c
+content-type: application/json
