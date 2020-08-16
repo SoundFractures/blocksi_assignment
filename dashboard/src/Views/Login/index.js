@@ -10,7 +10,7 @@ import Container from "@material-ui/core/Container";
 import Alert from "@material-ui/lab/Alert";
 import LogRegAvatar from "./../Components/logregAvatar";
 import LogRegRedirect from "./../Components/logregRedirect";
-
+import axios from "axios";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -30,9 +30,14 @@ const useStyles = makeStyles((theme) => ({
 function Login(props) {
   const classes = useStyles();
   const [isError, setIsError] = useState(false);
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const signIn = async () => {};
+  const handleSignIn = async () => {
+    const body = {
+      username: username,
+      password: password,
+    };
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -44,15 +49,14 @@ function Login(props) {
             margin="normal"
             required
             fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
+            id="username"
+            label="Username"
+            name="username"
             autoFocus
             onChange={(e) => {
-              setEmail(e.target.value);
+              setUsername(e.target.value);
             }}
-            value={email}
+            value={username}
           />
           <TextField
             variant="standard"
@@ -63,7 +67,6 @@ function Login(props) {
             label="Password"
             type="password"
             id="password"
-            autoComplete="current-password"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
@@ -71,7 +74,7 @@ function Login(props) {
           />
 
           <Button
-            onClick={signIn}
+            onClick={() => handleSignIn()}
             fullWidth
             variant="contained"
             color="primary"
@@ -95,6 +98,7 @@ function Login(props) {
       <Box mt={8}>
         <Copyright />
       </Box>
+      <pre>{JSON.stringify(username)}</pre>
     </Container>
   );
 }

@@ -59,8 +59,7 @@ router.post("/register", async (req, res) => {
     });
 });
 
-//Login
-//Register User
+//Login user
 router.post("/login", async (req, res) => {
     const {
         username,

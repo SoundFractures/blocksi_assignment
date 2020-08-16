@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(3),
     marginBottom: theme.spacing(8),
     marginTop: theme.spacing(4),
+
     width: "auto",
   },
   button: {
