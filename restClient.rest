@@ -1,38 +1,48 @@
 GET http://localhost:5000/api/contacts
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMzk2NTQzMjc1OGVjMmNmY2Y3MjgxNCIsInVzZXJuYW1lIjoiVGVzdDEyIiwiaWF0IjoxNTk3NTk2OTk1fQ.DLVFKGwLH6V303b4EM-00VIc56fASUSO0mWd8QQT4bA
 
-{
-    "user_id": "user1"
-}
 
 ###
 
-PATCH http://localhost:5000/api/contacts/5f37a699e5f2d405849fbd28
+GET http://localhost:5000/api/contacts/5f39677dd437fe74a4054f03
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMzk2NTQzMjc1OGVjMmNmY2Y3MjgxNCIsInVzZXJuYW1lIjoiVGVzdDEyIiwiaWF0IjoxNTk3NTk2OTk1fQ.DLVFKGwLH6V303b4EM-00VIc56fASUSO0mWd8QQT4bA
+
+
+###
+
+PUT http://localhost:5000/api/contacts/5f3965dece45edc3d8af43de
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMzk2NTQzMjc1OGVjMmNmY2Y3MjgxNCIsInVzZXJuYW1lIjoiVGVzdDEyIiwiaWF0IjoxNTk3NTk2OTk1fQ.DLVFKGwLH6V303b4EM-00VIc56fASUSO0mWd8QQT4bA
+
 
 {
     "firstName": "Test New 2",
     "lastName": "Test 1232",
-    "phoneNumber": "2123123123",
-    "user_id": "user1"
+    "phoneNumber": "2123123123"
 }
 ###
 
 
 POST http://localhost:5000/api/contacts
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMzk2NTQzMjc1OGVjMmNmY2Y3MjgxNCIsInVzZXJuYW1lIjoiVGVzdDEyIiwiaWF0IjoxNTk3NTk2OTk1fQ.DLVFKGwLH6V303b4EM-00VIc56fASUSO0mWd8QQT4bA
+
 
 {
     "firstName": "Test",
     "lastName": "Test",
-    "phoneNumber": "051 123 456",
-    "user_id": "user1"
+    "phoneNumber": "051 123 456"
+
 }
 
 ###
 
-DELETE http://localhost:5000/api/contacts/5f37f6cec5060096dc770936
+DELETE http://localhost:5000/api/contacts/5f39677dd437fe74a4054f03
 content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmMzk2NTQzMjc1OGVjMmNmY2Y3MjgxNCIsInVzZXJuYW1lIjoiVGVzdDEyIiwiaWF0IjoxNTk3NTk2OTk1fQ.DLVFKGwLH6V303b4EM-00VIc56fASUSO0mWd8QQT4bA
+
 
 ###
 

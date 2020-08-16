@@ -9,10 +9,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Router>
       <Switch>
-        <Route exact path="/" component={Initial}></Route>
+        <Route exact path="/" component={Home}></Route>
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
-        <Route exact path="/home" component={Home} />
       </Switch>
     </Router>
   </React.StrictMode>,

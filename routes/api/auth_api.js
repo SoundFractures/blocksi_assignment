@@ -43,9 +43,7 @@ router.post("/register", async (req, res) => {
                             id: user.id,
                             username: user.username
                         },
-                        process.env.JWT_ACCESS_SECRET, {
-                            expiresIn: 300
-                        }, (error, token) => {
+                        process.env.JWT_ACCESS_SECRET, (error, token) => {
                             if (error) throw error;
                             res.send({
                                 id: user.id,

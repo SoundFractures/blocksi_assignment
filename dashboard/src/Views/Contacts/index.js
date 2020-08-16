@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 600,
     margin: "auto",
     marginTop: theme.spacing(6),
+    padding: theme.spacing(2),
   },
   form: {
     width: "auto",
@@ -58,7 +59,8 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
   },
   activeRow: {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.primary.light,
+    textDecorationColor: "white",
   },
 }));
 
