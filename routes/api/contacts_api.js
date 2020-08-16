@@ -27,8 +27,7 @@ router.post('/', async (req, res) => {
 });
 
 //Update Contact
-
-router.patch('/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
     const contact = await Contact.findById(req.params.id)
         .catch(error => res.status(404).json({
             status: "Contact of that ID not found."

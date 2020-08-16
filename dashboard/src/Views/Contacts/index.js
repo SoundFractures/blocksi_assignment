@@ -57,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),
   },
+  activeRow: {
+    backgroundColor: theme.palette.action.hover,
+  },
 }));
 
 const CustomField = ({ label, ...props }) => {
@@ -76,12 +79,15 @@ export default function Contacts(props) {
   const classes = useStyles();
   const [contacts, setContacts] = useState([]);
   const [editID, setEditID] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  //Handles getting all Contacts from User
   const getContacts = async () => {
     let res = await axios.get("/api/contacts");
     setContacts(res.data);
   };
 
+  //Handles create / update Contact
   const handleContact = async (data) => {
     const body = {
       firstName: data.firstName,
@@ -90,13 +96,13 @@ export default function Contacts(props) {
       user_id: props.user,
     };
     !!editID
-      ? await axios.patch(`/api/contacts/${editID}`, body)
+      ? await axios.put(`/api/contacts/${editID}`, body)
       : await axios.post("/api/contacts", body);
 
     await getContacts();
     setEditID("");
   };
-
+  //Handles populating the form for Contact update
   const prepareUpdate = (id, contact, setFieldValue) => {
     console.log(id);
     setFieldValue("firstName", contact.firstName);
@@ -104,19 +110,19 @@ export default function Contacts(props) {
     setFieldValue("phoneNumber", contact.phoneNumber);
     setEditID(id);
   };
-
+  //Handles removing data for updating a Contact
   const cancelUpdate = (resetForm) => {
     setEditID("");
     resetForm();
   };
-
+  //Handles delete Contact
   const deleteContact = async (id, resetForm) => {
     await axios.delete(`/api/contacts/${id}`);
     await getContacts();
     setEditID("");
     resetForm();
   };
-
+  //Handles getting all initial Contacts
   useEffect(() => {
     getContacts();
   }, []);
@@ -195,7 +201,7 @@ export default function Contacts(props) {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  {!!editID ? "Edit" : "Add"} Contact
+                  {!!editID ? "Update" : "Add"}
                 </Button>
               </Grid>
               {!!editID ? (
@@ -216,53 +222,64 @@ export default function Contacts(props) {
               )}
             </Grid>
           </Paper>
-
-          <TableContainer component={Paper} className={classes.table}>
-            <Table aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell>First Name</TableCell>
-                  <TableCell>Last Name</TableCell>
-                  <TableCell>Phone Number</TableCell>
-                  <TableCell align="right">Edit</TableCell>
-                  <TableCell align="right">Delete</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {contacts.map((contact) => (
-                  <TableRow key={contact._id}>
-                    <TableCell component="th" scope="row">
-                      {contact.firstName}
-                    </TableCell>
-                    <TableCell>{contact.lastName}</TableCell>
-                    <TableCell>{contact.phoneNumber}</TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        aria-label="more"
-                        aria-controls="long-menu"
-                        aria-haspopup="true"
-                        onClick={() =>
-                          prepareUpdate(contact._id, contact, setFieldValue)
-                        }
-                      >
-                        <EditIcon />
-                      </IconButton>
-                    </TableCell>
-                    <TableCell align="right">
-                      <IconButton
-                        aria-label="more"
-                        aria-controls="long-menu"
-                        aria-haspopup="true"
-                        onClick={() => deleteContact(contact._id, resetForm)}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    </TableCell>
+          {contacts.length == 0 ? (
+            <Typography className={classes.formTopHeader}>
+              No Contacts :(
+            </Typography>
+          ) : (
+            <TableContainer component={Paper} className={classes.table}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>First Name</TableCell>
+                    <TableCell>Last Name</TableCell>
+                    <TableCell>Phone Number</TableCell>
+                    <TableCell align="right">Edit</TableCell>
+                    <TableCell align="right">Delete</TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                </TableHead>
+
+                <TableBody>
+                  {contacts.map((contact) => (
+                    <TableRow
+                      key={contact._id}
+                      className={
+                        editID == contact._id ? classes.activeRow : null
+                      }
+                    >
+                      <TableCell component="th" scope="row">
+                        {contact.firstName}
+                      </TableCell>
+                      <TableCell>{contact.lastName}</TableCell>
+                      <TableCell>{contact.phoneNumber}</TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="more"
+                          aria-controls="long-menu"
+                          aria-haspopup="true"
+                          onClick={() =>
+                            prepareUpdate(contact._id, contact, setFieldValue)
+                          }
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell align="right">
+                        <IconButton
+                          aria-label="more"
+                          aria-controls="long-menu"
+                          aria-haspopup="true"
+                          onClick={() => deleteContact(contact._id, resetForm)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          )}
         </form>
       )}
     </Formik>

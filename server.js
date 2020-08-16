@@ -5,12 +5,10 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
-const contacts = require('./routes/api/contacts_api');
 
-
-//const db = require('./config/config').dbConnection;
 mongoose.connect(process.env.db, {
-    useNewUrlParser: true
+    useNewUrlParser: true,
+    userCreateIndex: true
 }).then(() => console.log("Mongo DB | Connected")).catch(error => console.log(error));
 
 const port = process.env.PORT;
@@ -20,7 +18,8 @@ app.get('/', (req, res) => {
     res.send("Hello db");
 })
 
-app.use('/api/contacts', contacts);
+app.use('/api/contacts', require('./routes/api/contacts_api'));
+app.use('/api/auth', require('./routes/api/auth_api'));
 
 
 app.listen(port)
