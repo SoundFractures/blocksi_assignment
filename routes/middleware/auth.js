@@ -4,8 +4,8 @@ require('dotenv').config();
 function authMiddleware(req, res, next) {
     const header = req.headers['authorization'];
     const token = header && header.split(' ')[1];
-    console.log(token);
-    if (token == null) return res.status(401).json({
+
+    if (!token) return res.status(401).json({
         response: "Token not found."
     })
 

@@ -1,20 +1,27 @@
-import React from "react";
-import { Button } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Switch, Route, BrowserRouter as Router } from "react-router-dom";
+import Login from "./Login";
+import Register from "./Register";
+import Home from "./Home";
+import { Provider } from "react-redux";
+import store from "./store";
+import { getUser } from "./../Auth/actions";
+import PrivateRoute from "./privateRoute";
+
 function Views() {
-  const user = null;
+  useEffect(() => {
+    store.dispatch(getUser());
+  }, []);
   return (
-    <div>
-      <Link to="/login">
-        <Button color="primary">Login</Button>
-      </Link>
-      <Link to="/register">
-        <Button color="primary">Register</Button>
-      </Link>
-      <Link to="/home">
-        <Button color="primary">Home</Button>
-      </Link>
-    </div>
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <PrivateRoute exact path="/" component={Home}></PrivateRoute>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+        </Switch>
+      </Router>
+    </Provider>
   );
 }
 

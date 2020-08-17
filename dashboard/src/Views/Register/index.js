@@ -1,17 +1,19 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import Box from "@material-ui/core/Box";
-import Typography from "@material-ui/core/Typography";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import Alert from "@material-ui/lab/Alert";
 import LogRegAvatar from "./../Components/logregAvatar";
-import logregRedirect from "./../Components/logregRedirect";
 import LogRegRedirect from "./../Components/logregRedirect";
-import axios from "axios";
+import Copyright from "./../Components/copyright";
+import { connect } from "react-redux";
+import { register } from "./../../Auth/actions";
+import { clearErrors } from "./../../Auth/errorActions";
+import CustomAlert from "./../Components/customAlert";
+import { Redirect } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -27,12 +29,24 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  alert: {
-    marginTop: theme.spacing(4),
-  },
 }));
 
-function Login(props) {
+function Register(props) {
+  useEffect(() => {
+    const { error } = props;
+
+    if (error.id === "REGISTER_FAIL") {
+      setIsError(error.response.response);
+    } else {
+      setIsError("");
+    }
+  }, [props]);
+  Register.propTypes = {
+    isAuth: PropTypes.bool,
+    error: PropTypes.object.isRequired,
+    register: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
+  };
   const classes = useStyles();
   const [isError, setIsError] = useState("");
   const [username, setUsername] = useState("");
@@ -45,14 +59,16 @@ function Login(props) {
         username: username,
         password: password,
       };
-      const res = await axios
-        .post("/api/auth/register", body)
-        .then((res) => console.log(res)) //Redirect with Auth PRoute
-        .catch((error) => setIsError(error.response.data.response));
+      props.clearErrors();
+      props.register(body);
     } else {
       setIsError("Passwords do not match.");
     }
   };
+  const referer = props.location.state && (props.location.state.referer || "/");
+  if (props.auth.isAuth) {
+    return <Redirect to={referer} />;
+  }
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -113,13 +129,7 @@ function Login(props) {
           <LogRegRedirect page="/login" text="Have an Account? Sign In!" />
         </form>
       </div>
-      <div>
-        {!!isError && (
-          <Alert severity="warning" className={classes.alert}>
-            {isError}
-          </Alert>
-        )}
-      </div>
+      <div>{!!isError && <CustomAlert text={isError} />}</div>
       <Box mt={8}>
         <Copyright />
       </Box>
@@ -127,11 +137,8 @@ function Login(props) {
   );
 }
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © Blocksi "} {new Date().getFullYear()}
-    </Typography>
-  );
-}
-export default Login;
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  error: state.error,
+});
+export default connect(mapStateToProps, { register, clearErrors })(Register);

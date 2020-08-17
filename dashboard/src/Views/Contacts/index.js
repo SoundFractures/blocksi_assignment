@@ -19,6 +19,8 @@ import axios from "axios";
 import DeleteIcon from "@material-ui/icons/Delete";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import { connect } from "react-redux";
+import { logout } from "./../../Auth/actions";
 
 const validationSchema = yup.object({
   firstName: yup.string().required().min(3).max(10),
@@ -78,16 +80,21 @@ const CustomField = ({ label, ...props }) => {
     />
   );
 };
-export default function Contacts(props) {
+function Contacts(props) {
   const classes = useStyles();
   const [contacts, setContacts] = useState([]);
   const [editID, setEditID] = useState("");
-  const [isDeleting, setIsDeleting] = useState(false);
-
+  const header = {
+    headers: {
+      Authorization: "Bearer " + localStorage.getItem("token"),
+    },
+  };
   //Handles getting all Contacts from User
   const getContacts = async () => {
-    let res = await axios.get("/api/contacts");
-    setContacts(res.data);
+    await axios
+      .get("/api/contacts", header)
+      .then((res) => setContacts(res.data))
+      .catch((error) => handleUnauthorized(error));
   };
 
   //Handles create / update Contact
@@ -99,15 +106,35 @@ export default function Contacts(props) {
       user_id: props.user,
     };
     !!editID
-      ? await axios.put(`/api/contacts/${editID}`, body)
-      : await axios.post("/api/contacts", body);
+      ? await axios
+          .put(`/api/contacts/${editID}`, body, header)
+          .catch((error) => handleUnauthorized(error))
+      : await axios
+          .post("/api/contacts", body, header)
+          .catch((error) => handleUnauthorized(error));
 
     await getContacts();
     setEditID("");
   };
+
+  const handleUnauthorized = (error) => {
+    if (error.response.status === 403 || error.response.status === 401) {
+      props.logout();
+    }
+  };
+
+  //Handles delete Contact
+  const deleteContact = async (id, resetForm) => {
+    await axios
+      .delete(`/api/contacts/${id}`, header)
+      .catch((error) => handleUnauthorized(error));
+    await getContacts();
+    setEditID("");
+    resetForm();
+  };
+
   //Handles populating the form for Contact update
   const prepareUpdate = (id, contact, setFieldValue) => {
-    console.log(id);
     setFieldValue("firstName", contact.firstName);
     setFieldValue("lastName", contact.lastName);
     setFieldValue("phoneNumber", contact.phoneNumber);
@@ -118,17 +145,11 @@ export default function Contacts(props) {
     setEditID("");
     resetForm();
   };
-  //Handles delete Contact
-  const deleteContact = async (id, resetForm) => {
-    await axios.delete(`/api/contacts/${id}`);
-    await getContacts();
-    setEditID("");
-    resetForm();
-  };
   //Handles getting all initial Contacts
   useEffect(() => {
     getContacts();
   }, []);
+
   return (
     <Formik
       validationOnChage={true}
@@ -199,7 +220,6 @@ export default function Contacts(props) {
                 <Button
                   variant="contained"
                   color="primary"
-                  fullwidth
                   className={classes.button}
                   disabled={isSubmitting}
                   type="submit"
@@ -212,7 +232,6 @@ export default function Contacts(props) {
                   <Button
                     variant="contained"
                     color="primary"
-                    fullwidth
                     className={classes.button}
                     disabled={isSubmitting}
                     onClick={() => cancelUpdate(resetForm)}
@@ -225,7 +244,7 @@ export default function Contacts(props) {
               )}
             </Grid>
           </Paper>
-          {contacts.length == 0 ? (
+          {contacts.length === 0 ? (
             <Typography className={classes.formTopHeader}>
               No Contacts :(
             </Typography>
@@ -247,7 +266,7 @@ export default function Contacts(props) {
                     <TableRow
                       key={contact._id}
                       className={
-                        editID == contact._id ? classes.activeRow : null
+                        editID === contact._id ? classes.activeRow : null
                       }
                     >
                       <TableCell component="th" scope="row">
@@ -288,3 +307,7 @@ export default function Contacts(props) {
     </Formik>
   );
 }
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+});
+export default connect(mapStateToProps, { logout })(Contacts);

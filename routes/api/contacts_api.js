@@ -14,7 +14,7 @@ router.get('/', authMiddleware, (req, res) => {
             response: "Contacts couldn't be collected."
         }))
 });
-
+//Find Contact
 router.get('/:id', authMiddleware, (req, res) => {
     Contact.find({
             _id: req.params.id
