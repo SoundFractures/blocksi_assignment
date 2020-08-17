@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Table from "@material-ui/core/Table";
@@ -70,7 +69,6 @@ const useStyles = makeStyles((theme) => ({
 const CustomField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
   const errorText = meta.error && meta.touched ? meta.error : "";
-
   return (
     <TextField
       label={label}
@@ -80,6 +78,7 @@ const CustomField = ({ label, ...props }) => {
     />
   );
 };
+
 function Contacts(props) {
   const classes = useStyles();
   const [contacts, setContacts] = useState([]);
@@ -89,6 +88,7 @@ function Contacts(props) {
       Authorization: "Bearer " + localStorage.getItem("token"),
     },
   };
+
   //Handles getting all Contacts from User
   const getContacts = async () => {
     await axios
@@ -116,7 +116,7 @@ function Contacts(props) {
     await getContacts();
     setEditID("");
   };
-
+  //Handles logging out token is not valid or missing
   const handleUnauthorized = (error) => {
     if (error.response.status === 403 || error.response.status === 401) {
       props.logout();
@@ -140,11 +140,13 @@ function Contacts(props) {
     setFieldValue("phoneNumber", contact.phoneNumber);
     setEditID(id);
   };
+
   //Handles removing data for updating a Contact
   const cancelUpdate = (resetForm) => {
     setEditID("");
     resetForm();
   };
+
   //Handles getting all initial Contacts
   useEffect(() => {
     getContacts();
